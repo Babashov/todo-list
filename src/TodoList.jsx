@@ -1,22 +1,15 @@
-import TodoList from './features/TodoList/TodoList';
-import TodoForm from './features/TodoForm';
-import './App.css';
-
-function App() {
+function TodoList() {
   const todos = [
     { id: 1, title: 'review resources' },
     { id: 2, title: 'take notes' },
     { id: 3, title: 'code out app' },
   ];
-
   return (
-    <div>
-      <h1>My Todos</h1>
+    <>
       {todos.map((todo) => (
         <li key={todo.id}>{todo.title}</li>
       ))}
-    </div>
+    </>
   );
 }
-
-export default App;
+export default TodoList;
