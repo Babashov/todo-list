@@ -6,8 +6,7 @@ function TodoForm({ onAddTodo }) {
 
   function handleAddTodo(event) {
     event.preventDefault();
-    const newTitle = setTitle(event.target.title.value);
-    onAddTodo(newTitle);
+    onAddTodo(title);
     event.target.title.value = '';
     todoTitleInput.current.focus();
   }
@@ -15,7 +14,13 @@ function TodoForm({ onAddTodo }) {
   return (
     <form onSubmit={handleAddTodo}>
       <label htmlFor="todoTitle">Todo</label>
-      <input ref={todoTitleInput} name="title" type="text" id="todoTitle" />
+      <input
+        ref={todoTitleInput}
+        name="title"
+        type="text"
+        id="todoTitle"
+        onChange={(e) => setTitle(e.target.value)}
+      />
       <button>Add Todo</button>
     </form>
   );
