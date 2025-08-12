@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
 
-function TodoForm({ onAddTodo }) {
+function TodoForm({ onAddTodo, addisTodolistHave }) {
   const todoTitleInput = useRef('');
   const [title, setTitle] = useState('');
 
   function handleAddTodo(event) {
     event.preventDefault();
     onAddTodo(title);
+    addisTodolistHave();
     event.target.title.value = '';
     todoTitleInput.current.focus();
   }
