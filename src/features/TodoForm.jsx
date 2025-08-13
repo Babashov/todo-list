@@ -20,7 +20,7 @@ function TodoForm({ onAddTodo, addisTodolistHave }) {
         elementId="todoTitle"
         label="Todo"
         onChange={(e) => setTitle(e.target.value)}
-        ref={todoTitleInput}
+        inputRef={todoTitleInput}
         value={title}
       />
       <button>Add Todo</button>
