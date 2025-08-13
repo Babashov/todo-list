@@ -1,17 +1,20 @@
-import TodoList from './TodoList';
-import TodoForm from './TodoForm';
-import './App.css';
 import { useState } from 'react';
+import './App.css';
+import FormWrapper from './FormWrapper';
+import CalculatorWrapper from './CalculatorWrapper';
+import { OperandContext } from './context/OperandContext';
 
 function App() {
-  const [newTodo, setNewTodo] = useState('Exmaple Text');
+  const [operand, setOperand] = useState(0);
+
   return (
-    <div>
-      <h1>My Todos</h1>
-      <TodoForm />
-      <p>{newTodo}</p>
-      <TodoList />
-    </div>
+    <main>
+      <h1>MultiCalc</h1>
+      <OperandContext.Provider value={{ operand, setOperand }}>
+        <FormWrapper />
+        <CalculatorWrapper />
+      </OperandContext.Provider>
+    </main>
   );
 }
 
