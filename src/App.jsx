@@ -25,13 +25,28 @@ function App() {
   function addisTodolistHave(isTodolistHave) {
     return setIsTodlistHave(!isTodolistHave);
   }
+
+  function updateTodo(editedTodo) {
+    const updatedTodos = todoList.map((todo) => {
+      if (todo.id === editedTodo.id) {
+        return { ...editedTodo };
+      }
+      return todo;
+    });
+    setTodoList(updatedTodos);
+  }
+
   return (
     <div>
       <h1>My Todos</h1>
       <TodoForm onAddTodo={addTodo} addisTodolistHave={addisTodolistHave} />
 
       {isTodolistHave ? (
-        <TodoList todoList={todoList} onCompleteTodo={completeTodo} />
+        <TodoList
+          onUpdateTodo={updateTodo}
+          todoList={todoList}
+          onCompleteTodo={completeTodo}
+        />
       ) : (
         <p>Add todo above to get started</p>
       )}
