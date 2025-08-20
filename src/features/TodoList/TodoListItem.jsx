@@ -1,9 +1,13 @@
-<<<<<<< HEAD
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
-function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
+
+function TodoListItem({ todo, onCompleteTodo, onUpdateTodo, isSaving }) {
   const [isEditing, setIsEditing] = useState(false);
   const [workingTitle, setWorkingTitle] = useState(todo.title);
+
+  useEffect(() => {
+    setWorkingTitle(todo.title);
+  }, [todo]);
 
   function handleCancel(e) {
     e.preventDefault();
@@ -30,7 +34,9 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
           <>
             <TextInputWithLabel onChange={handleEdit} value={workingTitle} />
             <button onClick={handleCancel}>Cancel</button>
-            <button onClick={handleUpdate}>Update</button>
+            <button onClick={handleUpdate}>
+              {isSaving ? 'Saving' : 'Update'}
+            </button>
           </>
         ) : (
           <>
@@ -47,14 +53,6 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
         )}
       </form>
     </li>
-=======
-function TodoListItem({ todo, onCompleteTodo }) {
-  return (
-    <form onChange={() => onCompleteTodo(todo.id)}>
-      <input type="checkbox" />
-      <li>{todo.title}</li>
-    </form>
->>>>>>> 62f3d88 (src/features && src/shared folders created and TodoForm.jsx moved to src/features folder and TodoList.jsx && TodoListItem.jsx files moved to src/features/TodoList folder)
   );
 }
 

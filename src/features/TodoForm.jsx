@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useState } from 'react';
 import TextInputWithLabel from '../shared/TextInputWithLabel';
 
-function TodoForm({ onAddTodo, addisTodolistHave }) {
+function TodoForm({ onAddTodo, addisTodolistHave, isSaving }) {
   const todoTitleInput = useRef('');
   const [title, setTitle] = useState('');
 
@@ -20,10 +20,10 @@ function TodoForm({ onAddTodo, addisTodolistHave }) {
         elementId="todoTitle"
         label="Todo"
         onChange={(e) => setTitle(e.target.value)}
-        ref={todoTitleInput}
+        inputRef={todoTitleInput}
         value={title}
       />
-      <button>Add Todo</button>
+      <button>{isSaving ? 'Saving...' : 'Add Todo'}</button>
     </form>
   );
 }
