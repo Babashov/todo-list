@@ -15,13 +15,19 @@ function App() {
 
   const [sortDirection, setSortDirection] = useState('desc');
 
+  const [queryString, setQueryString] = useState('');
+
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
     import.meta.env.VITE_TABLE_NAME
   }`;
 
   const encodeUrl = ({ sortField, sortDirection }) => {
+    let searchQuery = '';
+    if (queryString) {
+      searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
+    }
     let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-    return encodeURI(`${url}?${sortQuery}`);
+    return encodeURI(`${url}?${sortQuery}${searchQuery}`);
   };
 
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -37,7 +43,7 @@ function App() {
       };
       try {
         const resp = await fetch(
-          encodeUrl({ sortField, sortDirection }),
+          encodeUrl({ sortField, sortDirection, queryString }),
           options
         );
         if (!resp.ok) {
@@ -63,7 +69,7 @@ function App() {
       }
     };
     fetchTodos();
-  }, [sortField, sortDirection]);
+  }, [sortField, sortDirection, queryString]);
 
   const addTodo = async (title) => {
     const newTodo = { title, isCompleted: false, id: Date.now() };
@@ -92,7 +98,7 @@ function App() {
     try {
       setIsSaving(true);
       const resp = await fetch(
-        encodeUrl({ sortField, sortDirection }),
+        encodeUrl({ sortField, sortDirection, queryString }),
         options
       );
       if (!resp.ok) {
@@ -148,7 +154,7 @@ function App() {
 
     try {
       const resp = await fetch(
-        encodeUrl({ sortField, sortDirection }),
+        encodeUrl({ sortField, sortDirection, queryString }),
         options
       );
       if (!resp.ok) {
@@ -201,7 +207,7 @@ function App() {
 
     try {
       const resp = await fetch(
-        encodeUrl({ sortField, sortDirection }),
+        encodeUrl({ sortField, sortDirection, queryString }),
         options
       );
       if (!resp.ok) {
@@ -243,6 +249,8 @@ function App() {
             setSortDirection={setSortDirection}
             sortField={sortField}
             setSortField={setSortField}
+            queryString={queryString}
+            setQueryString={setQueryString}
           />
           {errorMessage && (
             <>
