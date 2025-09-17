@@ -1,5 +1,6 @@
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
+import TodosViewForm from './features/TodosViewForm';
 import './App.css';
 import { useState, useEffect } from 'react';
 
@@ -18,6 +19,11 @@ function App() {
     import.meta.env.VITE_TABLE_NAME
   }`;
 
+  const encodeUrl = ({ sortField, sortDirection }) => {
+    let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+    return encodeURI(`${url}?${sortQuery}`);
+  };
+
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
   useEffect(() => {
@@ -30,7 +36,10 @@ function App() {
         },
       };
       try {
-        const resp = await fetch(url, options);
+        const resp = await fetch(
+          encodeUrl({ sortField, sortDirection }),
+          options
+        );
         if (!resp.ok) {
           throw new Error('Failed fetching data from api');
         }
@@ -54,7 +63,7 @@ function App() {
       }
     };
     fetchTodos();
-  }, []);
+  }, [sortField, sortDirection]);
 
   const addTodo = async (title) => {
     const newTodo = { title, isCompleted: false, id: Date.now() };
@@ -82,7 +91,10 @@ function App() {
 
     try {
       setIsSaving(true);
-      const resp = await fetch(url, options);
+      const resp = await fetch(
+        encodeUrl({ sortField, sortDirection }),
+        options
+      );
       if (!resp.ok) {
         throw new Error('Fetched data from remote url is not possible');
       }
@@ -135,7 +147,10 @@ function App() {
     };
 
     try {
-      const resp = await fetch(url, options);
+      const resp = await fetch(
+        encodeUrl({ sortField, sortDirection }),
+        options
+      );
       if (!resp.ok) {
         throw new Error('Fetched data from remote url is not possible');
       }
@@ -185,7 +200,10 @@ function App() {
     };
 
     try {
-      const resp = await fetch(url, options);
+      const resp = await fetch(
+        encodeUrl({ sortField, sortDirection }),
+        options
+      );
       if (!resp.ok) {
         throw new Error('Fetched data from remote url is not possible');
       }
@@ -218,6 +236,13 @@ function App() {
             todoList={todoList}
             onCompleteTodo={completeTodo}
             isSaving={isSaving}
+          />
+          <hr />
+          <TodosViewForm
+            sortDirection={sortDirection}
+            setSortDirection={setSortDirection}
+            sortField={sortField}
+            setSortField={setSortField}
           />
           {errorMessage && (
             <>
