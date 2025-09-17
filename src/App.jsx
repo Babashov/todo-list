@@ -10,20 +10,14 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  const [sortField, setSortField] = useState("createdTime");
+  const [sortField, setSortField] = useState('createdTime');
 
-  const [sortDirection,setSortDirection] = useState('desc')
+  const [sortDirection, setSortDirection] = useState('desc');
 
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
     import.meta.env.VITE_TABLE_NAME
-    }`;
-  
-  const encodeUrl = ({ sortField, sortDirection }) => {
-  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  return encodeURI(`${url}?${sortQuery}`);
-};
-  
-  const 
+  }`;
+
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
   useEffect(() => {
@@ -108,7 +102,8 @@ function App() {
     }
   };
 
-  function completeTodo(id) {
+  const completeTodo = async (id) => {
+    setIsSaving(true);
     const updatedTodos = todoList.map((todo) => {
       if (todo.id === id) {
         return { ...todo, isCompleted: true };
@@ -116,7 +111,40 @@ function App() {
       return todo;
     });
     setTodoList(updatedTodos);
-  }
+    const checkedTodo = todoList.find((t) => t.id == id);
+
+    const payload = {
+      records: [
+        {
+          id: checkedTodo.id,
+          fields: {
+            title: checkedTodo.title,
+            isCompleted: true,
+          },
+        },
+      ],
+    };
+
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    };
+
+    try {
+      const resp = await fetch(url, options);
+      if (!resp.ok) {
+        throw new Error('Fetched data from remote url is not possible');
+      }
+    } catch (err) {
+      setErrorMessage(err.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   function addisTodolistHave(isTodolistHave) {
     return setIsTodlistHave(!isTodolistHave);
@@ -184,6 +212,7 @@ function App() {
       {!isLoading ? (
         <>
           {todoList.length === 0 && <p>Add Todo Above</p>}
+
           <TodoList
             onUpdateTodo={updateTodo}
             todoList={todoList}
