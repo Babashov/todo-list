@@ -216,6 +216,7 @@ function App() {
   return (
     <div className={styles.container}>
       <h1>My Todos</h1>
+      <img src="/ctd-learns-light.png" />
       <TodoForm
         onAddTodo={addTodo}
         addisTodolistHave={addisTodolistHave}
