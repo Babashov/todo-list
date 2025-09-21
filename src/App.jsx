@@ -1,3 +1,4 @@
+import styles from './App.module.css';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
@@ -213,7 +214,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <h1>My Todos</h1>
       <TodoForm
         onAddTodo={addTodo}
@@ -243,7 +244,9 @@ function App() {
           {errorMessage && (
             <>
               <hr />
-              <p>{errorMessage}</p>
+              <div className={styles.errorMsg}>
+                <p>{errorMessage}</p>
+              </div>
               <button onClick={(e) => setErrorMessage('')}>Dismiss</button>
             </>
           )}
