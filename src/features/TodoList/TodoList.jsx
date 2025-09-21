@@ -1,7 +1,8 @@
+import styles from './TodoList.module.css';
 import TodoListItem from './TodoListItem';
 function TodoList({ todoList, onUpdateTodo, onCompleteTodo }) {
   return (
-    <ul>
+    <ul className={styles.todoList}>
       {todoList.map((todo) => {
         return (
           !todo.isCompleted && (
