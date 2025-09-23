@@ -73,11 +73,55 @@ function reducer(state = initialState, action) {
         isLoading: false,
         isSaving: false,
       };
-    case actions.updateTodo:
-      return {
+
+    case actions.updateTodo: {
+      const updatedTodos = state.todoList.map((todo) => {
+        if (todo.id === action.editedTodo.id) {
+          return { ...action.editedTodo };
+        }
+        return todo;
+      });
+
+      const updatedState = {
         ...state,
+        todoList: updatedTodos,
       };
+
+      if (action.error) {
+        updatedState.errorMessage = action.error.message;
+      }
+
+      return updatedState;
+    }
+
     case actions.completeTodo:
+      {
+        const updatedTodos = state.todoList.map((todo) => {
+          if (todo.id === action.id) {
+            return { ...todo, isCompleted: true };
+          }
+          return todo;
+        });
+
+        return {
+          ...state,
+          todoList: updatedTodos,
+        };
+      }
+
+      {
+        const updatedTodos = state.todoList.map((todo) => {
+          if (todo.id === action.id) {
+            return { ...todo, isCompleted: true };
+          }
+          return todo;
+        });
+
+        return {
+          ...state,
+          todoList: updatedTodos,
+        };
+      }
       return {
         ...state,
       };
@@ -88,6 +132,7 @@ function reducer(state = initialState, action) {
     case actions.clearError:
       return {
         ...state,
+        errorMessage: '',
       };
     default:
       return state;
