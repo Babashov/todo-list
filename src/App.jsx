@@ -5,7 +5,15 @@ import TodosViewForm from './features/TodosViewForm';
 import './App.css';
 import { useState, useCallback, useEffect } from 'react';
 
+import {
+  reducer as todosReducer,
+  actions as todoActions,
+  initialState as initialTodosState,
+} from './reducers/todos.reducer';
+
 function App() {
+  const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
+
   const [todoList, setTodoList] = useState([]);
   const [isTodolistHave, setIsTodlistHave] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
