@@ -1,26 +1,26 @@
 const actions = {
-  //actions in useEffect that loads todos
   fetchTodos: 'fetchTodos',
   loadTodos: 'loadTodos',
-  //found in useEffect and addTodo to handle failed requests
   setLoadError: 'setLoadError',
-  //actions found in addTodo
   startRequest: 'startRequest',
   addTodo: 'addTodo',
   endRequest: 'endRequest',
-  //found in helper functions
   updateTodo: 'updateTodo',
   completeTodo: 'completeTodo',
-  //reverts todos when requests fail
   revertTodo: 'revertTodo',
-  //action on Dismiss Error button
   clearError: 'clearError',
+  setSortDirection: 'setSortDirection',
+  setSortField: 'setSortField',
+  setQueryString: 'setQueryString',
 };
 const initialState = {
   todoList: [],
   isLoading: false,
   isSaving: false,
   errorMessage: '',
+  sortField: 'createdTime',
+  sortDirection: 'desc',
+  queryString: '',
 };
 
 function reducer(state = initialState, action) {
@@ -38,9 +38,6 @@ function reducer(state = initialState, action) {
             id: record.id,
             ...record.fields,
           };
-          if (!todo.isCompleted) {
-            todo.isCompleted = false;
-          }
           return todo;
         }),
         isLoading: false,
@@ -59,9 +56,10 @@ function reducer(state = initialState, action) {
       };
     case actions.addTodo:
       const savedTodo = {
-        ...action.savedTodo,
-        isCompleted: action.savedTodo.isCompleted ?? false,
+        ...action.records,
+        isCompleted: false,
       };
+
       return {
         ...state,
         todoList: [...state.todoList, savedTodo],
@@ -94,37 +92,20 @@ function reducer(state = initialState, action) {
       return updatedState;
     }
 
-    case actions.completeTodo:
-      {
-        const updatedTodos = state.todoList.map((todo) => {
-          if (todo.id === action.id) {
-            return { ...todo, isCompleted: true };
-          }
-          return todo;
-        });
+    case actions.completeTodo: {
+      const updatedTodos = state.todoList.map((todo) => {
+        if (todo.id === action.id) {
+          return { ...todo, isCompleted: true };
+        }
+        return todo;
+      });
 
-        return {
-          ...state,
-          todoList: updatedTodos,
-        };
-      }
-
-      {
-        const updatedTodos = state.todoList.map((todo) => {
-          if (todo.id === action.id) {
-            return { ...todo, isCompleted: true };
-          }
-          return todo;
-        });
-
-        return {
-          ...state,
-          todoList: updatedTodos,
-        };
-      }
       return {
         ...state,
+        todoList: updatedTodos,
       };
+    }
+
     case actions.revertTodo:
       return {
         ...state,
@@ -134,9 +115,24 @@ function reducer(state = initialState, action) {
         ...state,
         errorMessage: '',
       };
+    case actions.setSortDirection:
+      return {
+        ...state,
+        sortDirection: action.value,
+      };
+    case actions.setSortField:
+      return {
+        ...state,
+        sortField: action.value,
+      };
+    case actions.setQueryString:
+      return {
+        ...state,
+        queryString: action.value,
+      };
     default:
       return state;
   }
 }
 
-export { actions, initialState };
+export { reducer, actions, initialState };
