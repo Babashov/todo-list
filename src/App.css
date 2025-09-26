@@ -1,0 +1,23 @@
+#root {
+  background-color: red;
+}
+h1 {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+button {
+  background: black;
+  color: white;
+}
+input {
+  padding: 3px;
+  border: 1px solid blue;
+  border-radius: 5px;
+}
+
+select {
+  padding: 5px;
+  border: 5px solid #ccc;
+  color: white;
+  background-color: black;
+}

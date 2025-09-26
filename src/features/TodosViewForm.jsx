@@ -25,7 +25,7 @@ function TodosViewForm({
     <form onSubmit={preventRefresh}>
       <div>
         <label htmlFor="titleSearch">Search Todos</label>
-        <inpust
+        <input
           type="text"
           id="titleSearch"
           name="title"

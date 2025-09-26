@@ -1,0 +1,14 @@
+.container {
+  display: grid;
+  height: 100vh;
+  place-items: center;
+  background: #ccc;
+}
+.errorMsg {
+  width: 300px;
+  height: 30px;
+  border: 1px solid green;
+  border-radius: 5px;
+  background-color: red;
+  color: white;
+}
