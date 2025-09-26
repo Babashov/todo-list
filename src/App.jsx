@@ -2,7 +2,7 @@ import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 function App() {
   const [todoList, setTodoList] = useState([]);
@@ -21,14 +21,14 @@ function App() {
     import.meta.env.VITE_TABLE_NAME
   }`;
 
-  const encodeUrl = ({ sortField, sortDirection }) => {
+  const encodeUrl = useCallback(() => {
     let searchQuery = '';
     if (queryString) {
       searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
     }
     let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
-  };
+  }, [sortField, sortDirection, queryString]);
 
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
@@ -42,10 +42,7 @@ function App() {
         },
       };
       try {
-        const resp = await fetch(
-          encodeUrl({ sortField, sortDirection, queryString }),
-          options
-        );
+        const resp = await fetch(encodeUrl(), options);
         if (!resp.ok) {
           throw new Error('Failed fetching data from api');
         }
@@ -97,10 +94,7 @@ function App() {
 
     try {
       setIsSaving(true);
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error('Fetched data from remote url is not possible');
       }
@@ -153,10 +147,7 @@ function App() {
     };
 
     try {
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error('Fetched data from remote url is not possible');
       }
@@ -206,10 +197,7 @@ function App() {
     };
 
     try {
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error('Fetched data from remote url is not possible');
       }
