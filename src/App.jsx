@@ -3,7 +3,7 @@ import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
 import './App.css';
-import { useState, useReducer, useCallback, useEffect } from 'react';
+import { useReducer, useCallback, useEffect } from 'react';
 
 import {
   reducer as todosReducer,
