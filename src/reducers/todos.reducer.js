@@ -21,6 +21,7 @@ const initialState = {
   sortField: 'createdTime',
   sortDirection: 'desc',
   queryString: '',
+  isTodolistHave: false,
 };
 
 function reducer(state = initialState, action) {
@@ -130,6 +131,13 @@ function reducer(state = initialState, action) {
         ...state,
         queryString: action.value,
       };
+
+    case actions.setIsTodolistHave:
+      return {
+        ...state,
+        isTodolistHave: !state.isTodolistHave,
+      };
+
     default:
       return state;
   }
