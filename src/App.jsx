@@ -157,7 +157,7 @@ function App() {
 
   function addisTodolistHave(dispatch) {
     dispatch({
-      type: actions.setIsTodolistHave,
+      type: todoActions.setIsTodolistHave,
       value: !todoState.isTodolistHave,
     });
   }
