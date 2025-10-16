@@ -14,10 +14,6 @@ import {
 function App() {
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
 
-  const [isTodolistHave, setIsTodlistHave] = useState(false);
-
-  const [queryString, setQueryString] = useState('');
-
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
     import.meta.env.VITE_TABLE_NAME
   }`;
@@ -25,7 +21,10 @@ function App() {
   const encodeUrl = useCallback(() => {
     let searchQuery = '';
     if (todoState.queryString) {
-      searchQuery = `&filterByFormula=SEARCH("${todoState.queryString}",+title)`;
+      dispatch({
+        type: actions.setQueryString,
+        value: `&filterByFormula=SEARCH("${todoState.queryString}",+title)`,
+      });
     }
     let sortQuery = `sort[0][field]=${todoState.sortField}&sort[0][direction]=${todoState.sortDirection}`;
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
@@ -62,7 +61,7 @@ function App() {
       }
     };
     fetchTodos();
-  }, []);
+  }, [encodeUrl]);
 
   const addTodo = async (title) => {
     const newTodo = { title, isCompleted: false, id: Date.now() };
@@ -94,7 +93,7 @@ function App() {
     };
 
     try {
-      setIsSaving(true);
+      dispatch({ type: todoActions.startRequest });
       const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error('Fetched data from remote url is not possible');
@@ -156,8 +155,11 @@ function App() {
     }
   };
 
-  function addisTodolistHave(isTodolistHave) {
-    return setIsTodlistHave(!isTodolistHave);
+  function addisTodolistHave(dispatch) {
+    dispatch({
+      type: actions.setIsTodolistHave,
+      value: !todoState.isTodolistHave,
+    });
   }
 
   const updateTodo = async (editedTodo) => {
@@ -227,12 +229,18 @@ function App() {
           />
           <hr />
           <TodosViewForm
-            sortDirection={todoState.errorMessagesortDirection}
-            setSortDirection={todoState.setSortDirection}
+            sortDirection={todoState.sortDirection}
+            setSortDirection={(v) =>
+              dispatch({ type: todoActions.setSortDirection, value: v })
+            }
             sortField={todoState.sortField}
-            setSortField={todoState.setSortField}
+            setSortField={(v) =>
+              dispatch({ type: todoActions.setSortField, value: v })
+            }
             queryString={todoState.queryString}
-            setQueryString={setQueryString}
+            setQueryString={(v) =>
+              dispatch({ type: todoActions.setQueryString, value: v })
+            }
           />
           {todoState.errorMessage && (
             <>
