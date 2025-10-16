@@ -22,7 +22,7 @@ function App() {
     let searchQuery = '';
     if (todoState.queryString) {
       dispatch({
-        type: actions.setQueryString,
+        type: todoActions.setQueryString,
         value: `&filterByFormula=SEARCH("${todoState.queryString}",+title)`,
       });
     }
