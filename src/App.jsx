@@ -20,15 +20,20 @@ function App() {
 
   const encodeUrl = useCallback(() => {
     let searchQuery = '';
+
     if (todoState.queryString) {
-      dispatch({
-        type: todoActions.setQueryString,
-        value: `&filterByFormula=SEARCH("${todoState.queryString}",+title)`,
-      });
+      searchQuery = `&filterByFormula=SEARCH("${todoState.queryString}", title)`;
     }
-    let sortQuery = `sort[0][field]=${todoState.sortField}&sort[0][direction]=${todoState.sortDirection}`;
+
+    const sortQuery = `sort[0][field]=${todoState.sortField}&sort[0][direction]=${todoState.sortDirection}`;
+
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
-  }, [todoState.sortField, todoState.sortDirection, todoState.queryString]);
+  }, [
+    url,
+    todoState.sortField,
+    todoState.sortDirection,
+    todoState.queryString,
+  ]);
 
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
