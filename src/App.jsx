@@ -2,6 +2,7 @@ import styles from './App.module.css';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
+import TodosPage from './pages/TodosPage';
 import './App.css';
 import { useState, useReducer, useCallback, useEffect } from 'react';
 
@@ -13,10 +14,6 @@ import {
 
 function App() {
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
-
-  const [isTodolistHave, setIsTodlistHave] = useState(false);
-
-  const [queryString, setQueryString] = useState('');
 
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
     import.meta.env.VITE_TABLE_NAME
@@ -62,7 +59,7 @@ function App() {
       }
     };
     fetchTodos();
-  }, []);
+  }, [encodeUrl]);
 
   const addTodo = async (title) => {
     const newTodo = { title, isCompleted: false, id: Date.now() };
@@ -156,8 +153,11 @@ function App() {
     }
   };
 
-  function addisTodolistHave(isTodolistHave) {
-    return setIsTodlistHave(!isTodolistHave);
+  function addisTodolistHave(dispatch) {
+    dispatch({
+      type: todoActions.setIsTodolistHave,
+      value: !todoState.isTodolistHave,
+    });
   }
 
   const updateTodo = async (editedTodo) => {
@@ -211,46 +211,15 @@ function App() {
     <div className={styles.container}>
       <h1>My Todos</h1>
       <img src="/ctd-learns-light.png" />
-      <TodoForm
-        onAddTodo={addTodo}
+      <TodosPage
+        todoState={todoState}
+        dispatch={dispatch}
+        todoActions={todoActions}
+        addTodo={addTodo}
+        completeTodo={completeTodo}
+        updateTodo={updateTodo}
         addisTodolistHave={addisTodolistHave}
-        isSaving={todoState.isSaving}
       />
-      {!todoState.isLoading ? (
-        <>
-          {todoState.todoList.length === 0 && <p>Add Todo Above</p>}
-          <TodoList
-            onUpdateTodo={updateTodo}
-            todoList={todoState.todoList}
-            onCompleteTodo={completeTodo}
-            isSaving={todoState.isSaving}
-          />
-          <hr />
-          <TodosViewForm
-            sortDirection={todoState.errorMessagesortDirection}
-            setSortDirection={todoState.setSortDirection}
-            sortField={todoState.sortField}
-            setSortField={todoState.setSortField}
-            queryString={todoState.queryString}
-            setQueryString={setQueryString}
-          />
-          {todoState.errorMessage && (
-            <>
-              <hr />
-              <div className={styles.errorMsg}>
-                <p>{todoState.errorMessage}</p>
-              </div>
-              <button
-                onClick={(e) => dispatch({ type: todoActions.clearError })}
-              >
-                Dismiss
-              </button>
-            </>
-          )}
-        </>
-      ) : (
-        <p>Todo list loading...</p>
-      )}
     </div>
   );
 }
