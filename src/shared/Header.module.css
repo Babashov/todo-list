@@ -1,0 +1,25 @@
+.header {
+  position: relative;
+  padding: 1rem;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+}
+
+.nav {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.active {
+  color: white;
+}
+
+.inactive {
+  color: black;
+}
