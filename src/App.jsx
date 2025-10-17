@@ -1,4 +1,3 @@
-import styles from './App.module.css';
 import { Routes, Route, useLocation } from 'react-router';
 import TodosPage from './pages/TodosPage';
 import About from './pages/About';
@@ -43,7 +42,12 @@ function App() {
     }
     let sortQuery = `sort[0][field]=${todoState.sortField}&sort[0][direction]=${todoState.sortDirection}`;
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
-  }, [todoState.sortField, todoState.sortDirection, todoState.queryString]);
+  }, [
+    url,
+    todoState.sortField,
+    todoState.sortDirection,
+    todoState.queryString,
+  ]);
 
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
@@ -108,7 +112,7 @@ function App() {
     };
 
     try {
-      setIsSaving(true);
+      dispatch({ type: todoActions.startRequest });
       const resp = await fetch(encodeUrl(), options);
       if (!resp.ok) {
         throw new Error('Fetched data from remote url is not possible');
@@ -238,6 +242,12 @@ function App() {
               addTodo={addTodo}
               updateTodo={updateTodo}
               completeTodo={completeTodo}
+              addisTodolistHave={() =>
+                dispatch({
+                  type: todoActions.setIsTodolistHave,
+                  value: !todoState.isTodolistHave,
+                })
+              }
             />
           }
         />
