@@ -1,7 +1,9 @@
 import styles from './App.module.css';
+import { Routes, Route, useLocation } from 'react-router';
 import TodosPage from './pages/TodosPage';
+import Header from './shared/Header';
 import './App.css';
-import { useReducer, useCallback, useEffect } from 'react';
+import { useState, useReducer, useCallback, useEffect } from 'react';
 
 import {
   reducer as todosReducer,
@@ -11,6 +13,22 @@ import {
 
 function App() {
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
+
+  const [title, setTitle] = useState('Todo List');
+  const location = useLocation();
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/':
+        setTitle('Todo List');
+        break;
+      case '/about':
+        setTitle('About');
+        break;
+      default:
+        setTitle('Not Found');
+    }
+  }, [location]);
 
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
     import.meta.env.VITE_TABLE_NAME
@@ -205,19 +223,26 @@ function App() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>My Todos</h1>
-      <img src="/ctd-learns-light.png" />
-      <TodosPage
-        todoState={todoState}
-        dispatch={dispatch}
-        todoActions={todoActions}
-        addTodo={addTodo}
-        completeTodo={completeTodo}
-        updateTodo={updateTodo}
-        addisTodolistHave={addisTodolistHave}
-      />
-    </div>
+    <>
+      <Header title={title} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <TodosPage
+              todoState={todoState}
+              dispatch={dispatch}
+              todoActions={todoActions}
+              addTodo={addTodo}
+              updateTodo={updateTodo}
+              completeTodo={completeTodo}
+            />
+          }
+        />
+        <Route path="/about" element={<h1>About</h1>} />
+        <Route path="*" element={<h1>Not Found</h1>} />
+      </Routes>
+    </>
   );
 }
 
