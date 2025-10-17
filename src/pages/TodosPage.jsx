@@ -33,6 +33,18 @@ function TodosPage({
     setSearchParams({ page: page.toString() });
   };
 
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
   return (
     <>
       <TodoForm
@@ -75,6 +87,10 @@ function TodosPage({
           />
 
           <div style={{ marginTop: '1rem' }}>
+            <button onClick={handlePrevious} disabled={currentPage === 1}>
+              Previous
+            </button>
+
             {Array.from({ length: totalPages }, (_, idx) => (
               <button
                 key={idx + 1}
@@ -85,6 +101,10 @@ function TodosPage({
                 {idx + 1}
               </button>
             ))}
+
+            <button onClick={handleNext} disabled={currentPage === totalPages}>
+              Next
+            </button>
           </div>
         </>
       ) : (
